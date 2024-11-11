@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>WebGis Itera Punya Gilang</title>
+    <!-- LEAFLET CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- LEAFLET JAVASCRIPT -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
+    <script>
+        // Inisialisasi Peta
+        var map = L.map('map').setView([-5.367016, 105.317890], 15);
+
+        // Tambahkan Basemap OpenStreetMap
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        osm.addTo(map);
+
+        // Tambahkan Basemap ESRI
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+        // MiniMap
+        var miniMap = new L.Control.MiniMap(osm, { toggleDisplay: true, minimized: false }).addTo(map);
+
+        // Menyiapkan layer untuk kontrol
+        var baseMaps = {
+            "OSM": osm,
+            "ESRI": Esri_WorldImagery
+        };
+
+        var overlayMaps = {};
+
+        // Tambahkan marker untuk setiap gedung menggunakan ikon default Leaflet
+        overlayMaps["GKU1"] = L.marker([-5.360931, 105.310394]).bindPopup("Gedung GKU 1");
+        overlayMaps["Gedung A"] = L.marker([-5.357899, 105.314404]).bindPopup("Gedung A");
+        overlayMaps["Gedung B"] = L.marker([-5.357887, 105.315336]).bindPopup("Gedung B");
+        overlayMaps["Gedung C"] = L.marker([-5.358400, 105.313565]).bindPopup("Gedung C");
+        overlayMaps["Gedung D"] = L.marker([-5.358744, 105.313516]).bindPopup("Gedung D");
+        overlayMaps["Gedung E"] = L.marker([-5.360009, 105.315538]).bindPopup("Gedung E");
+        overlayMaps["Gedung F"] = L.marker([-5.361391, 105.313751]).bindPopup("Gedung F");
+        overlayMaps["Masjid Baitul Ilmi ITERA"] = L.marker([-5.359061, 105.312633]).bindPopup("Masjid Baitul Ilmi ITERA");
+        overlayMaps["Gedung Labtek 1"] = L.marker([-5.360300, 105.310209]).bindPopup("Gedung Labtek 1");
+        overlayMaps["Gedung Labtek 3"] = L.marker([-5.360301, 105.309103]).bindPopup("Gedung Labtek 3");
+        overlayMaps["Gedung Labtek OZT"] = L.marker([-5.361512, 105.310453]).bindPopup("Gedung Labtek OZT");
+        overlayMaps["Gedung Asrama 1"] = L.marker([-5.358440, 105.317435]).bindPopup("Gedung Asrama 1");
+        overlayMaps["Gedung Asrama 2"] = L.marker([-5.358475, 105.319431]).bindPopup("Gedung Asrama 2");
+        overlayMaps["Gedung Asrama 3"] = L.marker([-5.359153, 105.319033]).bindPopup("Gedung Asrama 3");
+        overlayMaps["Gedung Asrama 4"] = L.marker([-5.359153, 105.317444]).bindPopup("Gedung Asrama 4");
+        overlayMaps["Gedung Asrama 5"] = L.marker([-5.358445, 105.318478]).bindPopup("Gedung Asrama 5");
+        overlayMaps["Kantin BKL"] = L.marker([-5.357602, 105.316506]).bindPopup("Kantin BKL");
+
+        // Bundaran
+        overlayMaps["Bundaran F"] = L.circle([-5.363156, 105.312634], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 20
+        }).bindPopup("Bundaran F");
+
+        overlayMaps["Bundaran GKU"] = L.circle([-5.360813, 105.314847], {
+            color: 'green',
+            fillColor: '#ff00ff',
+            fillOpacity: 0.5,
+            radius: 35
+        }).bindPopup("Bundaran GKU");
+
+        // Poligon Gedung E
+        overlayMaps["Polygon Gedung E"] = L.polygon([
+            [-5.359799, 105.315831],
+            [-5.359957, 105.315831],
+            [-5.359957, 105.315571],
+            [-5.360474, 105.315571],
+            [-5.360474, 105.315401],
+            [-5.359635, 105.315401],
+            [-5.359635, 105.315571],
+            [-5.359799, 105.315571]
+        ], {
+            color: 'blue',
+            fillColor: '#ffffff',
+            fillOpacity: 0.5
+        }).bindPopup("Bangunan Gedung E");
+
+        // Tambahkan Layer Control
+        L.control.layers(baseMaps, overlayMaps, {collapsed: false}).addTo(map);
+
+        // Tambahkan Skala
+        L.control.scale().addTo(map);
+
+        // Deteksi lokasi pengguna
+        map.locate({setView: true, maxZoom: 16});
+        map.on('locationfound', function(e) {
+            L.marker(e.latlng).addTo(map).bindPopup("Lokasi Anda").openPopup();
+        });
+        map.on('locationerror', function() {
+            alert("Lokasi Anda tidak ditemukan.");
+        });
+    </script>
+</body>
+</html>
